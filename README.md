@@ -1,25 +1,43 @@
-# Restaurante App — Semana 13
+# Restaurante App — Semana 14
 
 ## Descripción
 
-Proyecto de Programación Orientada a Objetos correspondiente a la Semana 13. Esta versión inicia la transición de `restaurante_app` desde una aplicación de consola hacia una interfaz gráfica de usuario desarrollada con **Tkinter**.
+Proyecto de Programación Orientada a Objetos correspondiente a la Semana 14, centrada en **componentes y contenedores**. Esta versión evoluciona la interfaz gráfica de `restaurante_app` desarrollada en la semana anterior, manteniendo la arquitectura modular, la persistencia mediante archivos JSON y la separación de responsabilidades.
 
-La aplicación utiliza una estructura separada por responsabilidades: modelos, servicios, datos JSON, vistas gráficas y un archivo `main.py` que prepara las dependencias y mantiene una sola ventana principal.
+## Objetivo de la evolución
+
+La interfaz fue reorganizada para ofrecer una experiencia más clara y ordenada. Se incorporaron contenedores para separar navegación, formularios, acciones y visualización de información. La sección de productos permite realizar operaciones sencillas desde la interfaz gráfica.
 
 ## Funcionalidades implementadas
 
-- Pantalla de acceso mediante `LoginView`.
-- Validación visual de campos vacíos.
+- Inicio de sesión mediante `LoginView`.
 - Validación de credenciales mediante `RestauranteServicio`.
-- Acceso con identificación o correo electrónico.
 - Panel principal mediante `MainView`.
-- Visualización de productos cargados desde `productos.json`.
-- Visualización de usuarios cargados desde `usuarios.json`.
-- Resumen de cantidad de productos y usuarios.
-- Opción **Ventas** identificada como funcionalidad pendiente.
-- Cierre de sesión y retorno al login dentro de la misma ventana.
+- Navegación por Inicio, Productos, Usuarios y Ventas.
+- Consulta de usuarios registrados.
+- Gestión de productos mediante:
+  - Registrar.
+  - Cargar / Consultar por código.
+  - Actualizar.
+  - Eliminar.
+  - Limpiar formulario.
+- Tabla `Treeview` para mostrar productos.
+- Barra de desplazamiento para la tabla de productos.
+- Mensajes de confirmación y error mediante cuadros de diálogo.
+- Persistencia de productos en `datos/productos.json`.
+- Actualización de la información visual después de cada operación.
 
-## Estructura
+## Componentes y contenedores utilizados
+
+La interfaz utiliza componentes de **Tkinter/ttk**, entre ellos `Frame`, `LabelFrame`, `Label`, `Entry`, `Button`, `Treeview` y `Scrollbar`.
+
+Los contenedores permiten separar jerárquicamente la ventana principal, el encabezado, el menú de navegación, el formulario de productos, el área de acciones y la tabla de registros.
+
+Se utilizaron principalmente los gestores de geometría `grid()` y `pack()` de acuerdo con la función de cada zona de la interfaz.
+
+Los botones ejecutan sus acciones mediante `command=` y las reglas del negocio permanecen en `RestauranteServicio`.
+
+## Arquitectura
 
 ```text
 restaurante_app/
@@ -41,73 +59,68 @@ restaurante_app/
 └── main.py
 ```
 
-## Responsabilidad de los componentes
+## Separación de responsabilidades
 
-- **Producto:** representa cada producto del restaurante y valida sus datos.
-- **Usuario:** representa a los usuarios utilizados para la simulación de acceso.
-- **ArchivoServicio:** lee los archivos JSON y construye los objetos correspondientes.
-- **RestauranteServicio:** concentra las operaciones de acceso y consulta de productos y usuarios.
-- **LoginView:** presenta los campos de usuario, contraseña, mensajes de validación y botón de ingreso.
-- **MainView:** presenta el panel principal, los productos, los usuarios y la opción futura de ventas.
-- **main.py:** crea una única instancia de `Tk()`, prepara los servicios y controla el cambio entre las vistas.
+- **Producto:** representa los datos y validaciones propias de un producto.
+- **Usuario:** representa los usuarios utilizados para el acceso.
+- **ArchivoServicio:** centraliza la lectura de JSON y la escritura de `productos.json`.
+- **RestauranteServicio:** concentra validaciones y operaciones de negocio sobre productos y usuarios.
+- **LoginView:** administra la presentación y captura de credenciales.
+- **MainView:** coordina la interacción gráfica, formularios, botones y tablas.
+- **main.py:** crea la ventana, carga los datos, prepara los servicios y controla el cambio de vistas.
 
-## Flujo de la aplicación
+Las vistas no manipulan directamente los archivos JSON.
+
+## Flujo de productos
 
 ```text
-Inicio
-  ↓
-main.py crea Tkinter y carga los datos
-  ↓
-LoginView
-  ↓
-Usuario + contraseña
-  ↓
-RestauranteServicio valida el acceso
-  ↓
 MainView
-  ↓
-Productos | Usuarios | Ventas (pendiente)
-  ↓
-Cerrar sesión
-  ↓
-LoginView
+   ↓
+Formulario de producto
+   ↓
+Botón command=
+   ↓
+RestauranteServicio
+   ↓
+ArchivoServicio
+   ↓
+productos.json
+   ↓
+Actualización de la tabla
+```
+
+## Ejecución
+
+Se requiere Python con Tkinter disponible. Desde la carpeta `restaurante_app` ejecutar:
+
+```bash
+python main.py
+```
+
+En Windows también puede utilizarse:
+
+```powershell
+py main.py
 ```
 
 ## Credenciales de prueba
-
-Para comprobar el funcionamiento se puede utilizar:
 
 - **Usuario:** `0922248737`
 - **Contraseña:** `1234`
 
 También se puede utilizar el correo registrado en `usuarios.json` como usuario.
 
-> El acceso es una simulación pedagógica y no representa un mecanismo real de autenticación segura.
+## Comprobaciones sugeridas
 
-## Ejecución
+1. Ejecutar `main.py` sin errores.
+2. Iniciar sesión con las credenciales de prueba.
+3. Entrar en **Usuarios** y comprobar la consulta.
+4. Entrar en **Productos** y registrar un producto.
+5. Cargar / consultar el producto mediante su código.
+6. Modificar sus datos y utilizar **Actualizar**.
+7. Utilizar **Eliminar** y confirmar la eliminación.
+8. Cerrar y volver a ejecutar la aplicación para comprobar la persistencia en `productos.json`.
 
-Se requiere Python con Tkinter disponible. Desde la carpeta `restaurante_app` ejecute:
+## Alcance de la Semana 14
 
-```bash
-python main.py
-```
-
-En Windows también puede utilizar:
-
-```powershell
-py main.py
-```
-
-## Comprobaciones realizadas
-
-1. Los archivos Python compilan correctamente.
-2. Los productos se cargan desde `productos.json`.
-3. Los usuarios se cargan desde `usuarios.json`.
-4. Las credenciales válidas permiten el acceso mediante `RestauranteServicio`.
-5. Credenciales incorrectas son rechazadas.
-6. Las vistas reciben la información desde el servicio y no leen directamente los archivos JSON.
-7. La aplicación mantiene una sola ventana principal y un solo `mainloop()`.
-
-## Funcionalidades pendientes
-
-Las ventas completas, formularios CRUD y otras funciones de la aplicación de consola anterior no se incorporan todavía en esta etapa, ya que serán desarrolladas progresivamente en las siguientes semanas.
+La actividad se concentra en componentes, contenedores, gestores de geometría e interacción básica mediante botones. No se incorporan eventos avanzados con `bind()`, doble clic, teclado o mouse, ni edición directa de tablas o bases de datos.
