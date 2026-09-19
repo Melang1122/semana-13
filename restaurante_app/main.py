@@ -10,18 +10,18 @@ RUTA_DATOS = Path(__file__).resolve().parent / "datos"
 
 
 class RestauranteApp:
-    """Controla una única ventana y el cambio entre LoginView y MainView."""
+    """Controla una única ventana y el cambio entre las vistas."""
 
     def __init__(self) -> None:
         self.root = tk.Tk()
-        self.root.title("Restaurante App - Semana 13")
-        self.root.geometry("900x560")
-        self.root.minsize(800, 500)
+        self.root.title("Restaurante App - Semana 14")
+        self.root.geometry("1100x680")
+        self.root.minsize(950, 600)
 
         archivos = ArchivoServicio(RUTA_DATOS)
         productos = archivos.cargar_productos()
         usuarios = archivos.cargar_usuarios()
-        self.servicio = RestauranteServicio(productos, usuarios)
+        self.servicio = RestauranteServicio(productos, usuarios, archivos)
 
         self.vista_actual = None
         self.mostrar_login()
