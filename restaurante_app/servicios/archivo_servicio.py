@@ -9,7 +9,7 @@ T = TypeVar("T")
 
 
 class ArchivoServicio:
-    """Centraliza la lectura de los archivos JSON usados por la aplicación."""
+    """Centraliza la lectura y escritura de los archivos JSON."""
 
     def __init__(self, directorio_datos: str | Path) -> None:
         self.directorio_datos = Path(directorio_datos)
@@ -55,3 +55,9 @@ class ArchivoServicio:
                 r["identificacion"], r["nombre"], r["correo"], r["contrasena"]
             ),
         )
+
+    def guardar_productos(self, productos: list[Producto]) -> None:
+        self.directorio_datos.mkdir(parents=True, exist_ok=True)
+        registros = [producto.a_diccionario() for producto in productos]
+        with open(self.ruta_productos, "w", encoding="utf-8") as archivo:
+            json.dump(registros, archivo, ensure_ascii=False, indent=4)
